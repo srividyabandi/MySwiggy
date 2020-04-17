@@ -77,15 +77,26 @@ def save_city(request):
 
 
 def update_city(request):
-    return None
+    cno = request.GET.get("cno")
+    cname= request.GET.get("cname")
+    state = request.GET.get("state")
+    d1 = {"cno":cno,"cname":cname,"state":state}
+    return render(request, "s_admin/open_city.html", {"update_data": d1, "sdata": CityModel.objects.all(),"csates":StateModel.objects.all()})
 
 
 def update_city_data(request):
-    return None
+    cno = request.POST.get("s1")
+    cname = request.POST.get("s2")
+    state = request.POST.get("s3")
+    CityModel.objects.filter(city_no=cno).update(city_name=cname,state=state)
+    return redirect('open_city')
+
 
 
 def delete_city(request):
-    return None
+    cno = request.GET.get("cno")
+    CityModel.objects.filter(city_no=cno).delete()
+    return redirect('open_city')
 
 
 def open_area(request):
@@ -100,6 +111,25 @@ def save_area(request):
     else:
         return render(request, "s_admin/open_area.html", {"sf": sf})
 
+def delete_area(request):
+    ano =request.GET.get("ano")
+    AreaModel.objects.filter(area_no=ano).delete()
+    return redirect("open_area")
+
+def update_area(request):
+   ano= request.GET.get("ano")
+   aname = request.GET.get("aname")
+   cname = request.GET.get("cname")
+   d1 = {"ano":ano,"aname":aname,"cname":cname}
+   return render(request,"s_admin/open_area.html",{"update_data":d1, "sdata": AreaModel.objects.all(), "cdata":CityModel.objects.all()})
+
+def update_area_data(request):
+    ano =  request.POST.get("s1")
+    aname= request.POST.get("s2")
+    cname = request.POST.get("s3")
+    AreaModel.objects.filter(area_no=ano).update(area_name=aname,city=cname)
+    return redirect("open_area")
+
 
 def open_type(request):
     return render(request, 's_admin/open_type.html', {"sf": RestaurantTypeForm(), "sdata": RestaurantTypeModel.objects.all()})
@@ -112,3 +142,21 @@ def save_type(request):
         return redirect('open_type')
     else:
         return render(request, "s_admin/open_type.html", {"sf": sf})
+
+
+def update_type(request):
+    tno = request.GET.get("tno")
+    tname = request.GET.get("tname")
+    d1 = {"tno":tno,"tname":tname}
+    return render(request,"s_admin/open_type.html",{"update_data":d1,"sdata":RestaurantTypeModel.objects.all()})
+
+def update_type_data(request):
+    tno = request.POST.get("t1")
+    tname = request.POST.get("t2")
+    RestaurantTypeModel.objects.filter(no=tno).update(type_name=tname)
+    return redirect("open_type")
+
+def delete_type(request):
+    tno = request.GET.get("tno")
+    RestaurantTypeModel.objects.filter(no=tno).delete()
+    return redirect("open_type")
